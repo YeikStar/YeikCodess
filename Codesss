@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>mi página web</title>
+    <style>
+        body {
+            font-family: arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            text-align: center;
+            background-color: #e0f7fa;
+        }
+        header {
+            background: #00796b;
+            color: white;
+            padding: 1em;
+        }
+        main {
+            padding: 2em;
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+        }
+        .content {
+            max-width: 500px;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        .history {
+            max-width: 300px;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            text-align: left;
+        }
+        .random-code {
+            font-size: 1.5em;
+            font-weight: bold;
+            margin-top: 20px;
+        }
+        button {
+            margin-top: 10px;
+            padding: 10px 20px;
+            font-size: 1em;
+            background-color: #00796b;
+            color: white;
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+        button:hover {
+            background-color: #004d40;
+        }
+        ul {
+            list-style-type: none;
+            padding: 0;
+        }
+        li {
+            background: #f0f0f0;
+            margin: 5px 0;
+            padding: 5px;
+            border-radius: 5px;
+        }
+    </style>
+    <script>
+        let codigosGenerados = new Set(JSON.parse(localStorage.getItem("codigos")) || []);
+        let contador = codigosGenerados.size + 1;
+
+        function actualizarHistorial() {
+            let historial = document.getElementById('historial');
+            historial.innerHTML = '';
+            let index = 1;
+            codigosGenerados.forEach(codigo => {
+                let nuevoElemento = document.createElement('li');
+                nuevoElemento.textContent = `${index}. ${codigo}`;
+                historial.appendChild(nuevoElemento);
+                index++;
+            });
+        }
+        
+        function generarCodigo() {
+            let caracteres = 'abcdefghijklmnopqrstuvwxyz0123456789';
+            let codigo;
+            do {
+                codigo = '';
+                for (let i = 0; i < 9; i++) {
+                    let randomIndex = Math.floor(Math.random() * caracteres.length);
+                    codigo += caracteres[randomIndex];
+                }
+            } while (codigosGenerados.has(codigo));
+            
+            codigosGenerados.add(codigo);
+            localStorage.setItem("codigos", JSON.stringify(Array.from(codigosGenerados)));
+            document.getElementById('codigo').textContent = codigo;
+            actualizarHistorial();
+        }
+        
+        window.onload = actualizarHistorial;
+    </script>
+</head>
+<body>
+    <header>
+        <h1>bienvenido a mi página web</h1>
+    </header>
+    <main>
+        <div class="content">
+            <p>este es un sitio web simple que puedes modificar a tu gusto.</p>
+            <p>añade tu propio contenido y personaliza el diseño.</p>
+            <p class="random-code" id="codigo">presiona el botón para generar un código</p>
+            <button onclick="generarCodigo()">generar código</button>
+        </div>
+        <div class="history">
+            <h3>historial de códigos</h3>
+            <ul id="historial"></ul>
+        </div>
+    </main>
+    <footer>
+        <p>derechos reservados &copy; 2025</p>
+    </footer>
+</body>
+</html>
